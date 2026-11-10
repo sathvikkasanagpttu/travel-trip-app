@@ -1,0 +1,22 @@
+.app-header {
+  width: 100%;
+  padding: 18px 48px;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+}
+
+.header-content {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.header-brand {
+  font-family: 'Caveat', cursive;
+  font-size: 38px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: 0.5px;
+}

@@ -1,0 +1,84 @@
+.stepper-nav {
+  width: 100%;
+}
+
+.stepper-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stepper-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.stepper-item.active {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+.stepper-item.upcoming {
+  background-color: transparent;
+  color: #64748b;
+}
+
+.stepper-item.completed {
+  background-color: transparent;
+  color: #1e293b;
+}
+
+.step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.active-number {
+  background-color: #ffffff;
+  color: #2563eb;
+}
+
+.upcoming-number {
+  border: 1.5px solid #64748b;
+  color: #64748b;
+  background-color: transparent;
+}
+
+.step-completed-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.step-text {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.active-text {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.upcoming-text {
+  color: #64748b;
+}
+
+.completed-text {
+  color: #1e293b;
+}

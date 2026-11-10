@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(uuid())
+  name         String
+  email        String    @unique
+  passwordHash String
+  role         String    @default("USER") // USER | ADMIN
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  bookings     Booking[]
+  drafts       Draft[]
+
+  @@map("users")
+}
+
+model Booking {
+  id               String        @id @default(uuid())
+  reference        String        @unique
+  userId           String?
+  user             User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  name             String
+  startLocation    String
+  endLocation      String
+  startLat         Float?
+  startLng         Float?
+  endLat           Float?
+  endLng           Float?
+  startDate        String
+  endDate          String
+  adults           Int           @default(1)
+  children         Int           @default(0)
+  infants          Int           @default(0)
+  assistanceNeeded Boolean       @default(false)
+  assistanceType   String?
+  assistanceNotes  String?
+  priceTotal       Float         @default(0)
+  currency         String        @default("USD")
+  status           String        @default("PENDING") // PENDING | CONFIRMED | CANCELLED
+  idempotencyKey   String?       @unique
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  statusEvents     StatusEvent[]
+
+  @@map("bookings")
+}
+
+model Draft {
+  id        String   @id @default(uuid())
+  userId    String?  @unique
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stepId    String   @default("YOUR_DETAILS")
+  payload   String   // JSON stringified draft data
+  updatedAt DateTime @updatedAt
+
+  @@map("drafts")
+}
+
+model StatusEvent {
+  id        String   @id @default(uuid())
+  bookingId String
+  booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  status    String   // PENDING | CONFIRMED | CANCELLED
+  note      String?
+  createdAt DateTime @default(now())
+
+  @@map("status_events")
+}

@@ -13,6 +13,7 @@ const Confirmation = ({
   assistanceType,
   onCancel,
   onConfirm,
+  isSubmitting = false,
 }) => {
   return (
     <div className="step-card">
@@ -76,10 +77,21 @@ const Confirmation = ({
       </div>
 
       <div className="form-actions dual-actions">
-        <button type="button" className="secondary-btn" onClick={onCancel}>
+        <button
+          type="button"
+          className="secondary-btn"
+          onClick={onCancel}
+          disabled={isSubmitting}
+        >
           Cancel
         </button>
-        <button type="button" className="primary-btn" onClick={onConfirm}>
+        <button
+          type="button"
+          className="primary-btn"
+          onClick={onConfirm}
+          disabled={isSubmitting}
+        >
+          {isSubmitting && <span className="btn-spinner" aria-hidden="true" />}
           Confirm
         </button>
       </div>

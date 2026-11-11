@@ -1,0 +1,200 @@
+:root {
+  /* ==========================================================================
+     COLOR TOKENS
+     ========================================================================== */
+  /* Brand Palette */
+  --color-primary: #2563eb;
+  --color-primary-light: #3b82f6;
+  --color-primary-soft: #dbeafe;
+  --color-navy: #304766;
+  --color-ink: #1e293b;
+  --color-text: #334155;
+  --color-muted: #64748b;
+  --color-subtle: #475569;
+  --color-border: #cbd5e1;
+  --color-border-soft: #e2e8f0;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f8fafc;
+  --color-bg: #f1f5f9;
+
+  /* Status Colors & Soft Tints */
+  --color-success: #16a34a;
+  --color-success-light: #22c55e;
+  --color-success-soft: #dcfce7;
+  --color-warning: #f59e0b;
+  --color-warning-light: #fbbf24;
+  --color-warning-soft: #fef3c7;
+  --color-danger: #dc2626;
+  --color-danger-light: #ef4444;
+  --color-danger-soft: #fee2e2;
+
+  /* Glassmorphism Surface Tokens */
+  --glass-bg: rgba(255, 255, 255, 0.82);
+  --glass-bg-card: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(255, 255, 255, 0.75);
+  --glass-border-subtle: rgba(226, 232, 240, 0.8);
+  --glass-fallback-surface: #ffffff;
+
+  /* ==========================================================================
+     TYPOGRAPHY SCALE
+     ========================================================================== */
+  --font-brand: 'Caveat', cursive, sans-serif;
+  --font-sans: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, sans-serif;
+
+  /* Modular Scale (12, 14, 16, 18, 20, 24, 32, 44px) */
+  --font-size-xs: 12px;
+  --line-height-xs: 16px;
+  --font-size-sm: 14px;
+  --line-height-sm: 20px;
+  --font-size-base: 16px;
+  --line-height-base: 24px;
+  --font-size-md: 18px;
+  --line-height-md: 26px;
+  --font-size-lg: 20px;
+  --line-height-lg: 28px;
+  --font-size-xl: 24px;
+  --line-height-xl: 32px;
+  --font-size-2xl: 32px;
+  --line-height-2xl: 40px;
+  --font-size-3xl: 44px;
+  --line-height-3xl: 52px;
+
+  /* Fluid Heading Sizes via clamp() */
+  --heading-1: clamp(2rem, 1.6rem + 2vw, 2.75rem); /* 32px - 44px */
+  --heading-2: clamp(1.5rem, 1.25rem + 1.25vw, 2rem); /* 24px - 32px */
+  --heading-3: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem); /* 20px - 24px */
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* ==========================================================================
+     SPACING SCALE (4px base)
+     ========================================================================== */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* ==========================================================================
+     RADIUS SCALE (8, 12, 16, 24, 9999px)
+     ========================================================================== */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* ==========================================================================
+     ELEVATION SHADOWS (Layered, colored with navy #304766 at low alpha)
+     ========================================================================== */
+  --shadow-sm: 0 1px 2px 0 rgba(48, 71, 102, 0.06), 0 1px 3px 0 rgba(48, 71, 102, 0.08);
+  --shadow-md: 0 4px 6px -1px rgba(48, 71, 102, 0.08), 0 2px 4px -2px rgba(48, 71, 102, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(48, 71, 102, 0.1), 0 4px 6px -4px rgba(48, 71, 102, 0.06);
+  --shadow-xl: 0 20px 25px -5px rgba(48, 71, 102, 0.12), 0 8px 10px -6px rgba(48, 71, 102, 0.06);
+  --shadow-glow: 0 0 0 4px var(--color-primary-soft);
+  --shadow-glow-danger: 0 0 0 4px var(--color-danger-soft);
+
+  /* ==========================================================================
+     Z-INDEX SCALE
+     ========================================================================== */
+  --z-bg: -1;
+  --z-base: 0;
+  --z-card: 10;
+  --z-sticky: 100;
+  --z-dropdown: 200;
+  --z-modal: 500;
+  --z-toast: 1000;
+
+  /* ==========================================================================
+     BLUR VALUES
+     ========================================================================== */
+  --blur-sm: 4px;
+  --blur-md: 8px;
+  --blur-lg: 16px;
+  --blur-xl: 24px;
+
+  /* ==========================================================================
+     MOTION TOKENS
+     ========================================================================== */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 120ms;
+  --duration-normal: 200ms;
+  --duration-medium: 320ms;
+  --duration-slow: 560ms;
+
+  /* Focus ring */
+  --focus-ring: 2px solid var(--color-primary);
+  --focus-offset: 2px;
+}
+
+/* ==========================================================================
+   DARK THEME OVERRIDES
+   ========================================================================== */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-navy: #0f172a;
+    --color-ink: #f8fafc;
+    --color-text: #e2e8f0;
+    --color-muted: #94a3b8;
+    --color-subtle: #cbd5e1;
+    --color-border: #334155;
+    --color-border-soft: #1e293b;
+    --color-surface: #1e293b;
+    --color-surface-hover: #24344d;
+    --color-bg: #0b1120;
+
+    --color-primary-soft: rgba(37, 99, 235, 0.25);
+    --color-success-soft: rgba(22, 163, 74, 0.25);
+    --color-warning-soft: rgba(245, 158, 11, 0.25);
+    --color-danger-soft: rgba(220, 38, 38, 0.25);
+
+    --glass-bg: rgba(30, 41, 59, 0.82);
+    --glass-bg-card: rgba(30, 41, 59, 0.88);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-border-subtle: rgba(51, 65, 85, 0.8);
+    --glass-fallback-surface: #1e293b;
+
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.35);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.45);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.55);
+  }
+}
+
+[data-theme="dark"] {
+  --color-navy: #0f172a;
+  --color-ink: #f8fafc;
+  --color-text: #e2e8f0;
+  --color-muted: #94a3b8;
+  --color-subtle: #cbd5e1;
+  --color-border: #334155;
+  --color-border-soft: #1e293b;
+  --color-surface: #1e293b;
+  --color-surface-hover: #24344d;
+  --color-bg: #0b1120;
+
+  --color-primary-soft: rgba(37, 99, 235, 0.25);
+  --color-success-soft: rgba(22, 163, 74, 0.25);
+  --color-warning-soft: rgba(245, 158, 11, 0.25);
+  --color-danger-soft: rgba(220, 38, 38, 0.25);
+
+  --glass-bg: rgba(30, 41, 59, 0.82);
+  --glass-bg-card: rgba(30, 41, 59, 0.88);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-border-subtle: rgba(51, 65, 85, 0.8);
+  --glass-fallback-surface: #1e293b;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.45);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.55);
+}

@@ -1,0 +1,122 @@
+/* ==========================================================================
+   UTILITY CLASSES
+   ========================================================================== */
+
+/* Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Glassmorphism surface */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--blur-lg));
+  -webkit-backdrop-filter: blur(var(--blur-lg));
+  border: 1px solid var(--glass-border);
+}
+
+/* Elevated surface with layered shadow */
+.elevated {
+  box-shadow: var(--shadow-lg);
+}
+
+.elevated-xl {
+  box-shadow: var(--shadow-xl);
+}
+
+/* Fade in animation utility */
+.fade-in {
+  animation: fadeIn var(--duration-medium) var(--ease-out) forwards;
+}
+
+.fade-up {
+  animation: fadeUp var(--duration-medium) var(--ease-out) forwards;
+}
+
+.scale-in {
+  animation: scaleIn var(--duration-normal) var(--ease-out) forwards;
+}
+
+/* Stack layout utility */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.stack-sm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.stack-lg {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* Centered container */
+.container {
+  width: 100%;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+}
+
+/* Flexbox utilities */
+.flex {
+  display: flex;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.flex-1 {
+  flex: 1 1 0%;
+}
+
+/* Text alignment & helpers */
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-muted {
+  color: var(--color-muted);
+}
+
+.text-ink {
+  color: var(--color-ink);
+}
+
+.text-brand {
+  font-family: var(--font-brand);
+}

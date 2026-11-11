@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { useSocket } from '../../context/SocketContext'
@@ -6,6 +7,35 @@ import './index.css'
 const Header = () => {
   const { user, logout } = useAuth()
   const { connectionStatus } = useSocket()
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [theme, setTheme] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('travel_trip_theme') || 'light'
+    }
+    return 'light'
+  })
+
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+  }, [theme])
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 15)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  const toggleTheme = () => {
+    const nextTheme = theme === 'dark' ? 'light' : 'dark'
+    setTheme(nextTheme)
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('travel_trip_theme', nextTheme)
+    }
+  }
 
   let hasRouter = false
   try {
@@ -35,7 +65,7 @@ const Header = () => {
   )
 
   return (
-    <header className="app-header">
+    <header className={`app-header ${isScrolled ? 'header-scrolled' : ''}`}>
       <div className="header-content">
         <div className="header-brand-container">
           {BrandElement}
@@ -88,6 +118,16 @@ const Header = () => {
                 </Link>
               </div>
             )}
+
+            <button
+              type="button"
+              className="theme-toggle-btn"
+              onClick={toggleTheme}
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            >
+              {theme === 'dark' ? '☀️' : '🌙'}
+            </button>
           </nav>
         )}
       </div>

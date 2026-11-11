@@ -148,6 +148,21 @@ graph TD
   - Automated tests on Node 20, client build, and Docker smoke build tests.
   - Deploy workflow with Render and Vercel webhooks.
 
+### 🎨 UI/UX Redesign & Design System
+- **Design Tokens (`client/src/styles/tokens.css`)**:
+  - Semantic color palette extended with brand primary (`#2563eb`), navy (`#304766`), text (`#334155`), status feedback colors, and soft tints.
+  - Dark mode support via `@media (prefers-color-scheme: dark)` and `[data-theme="dark"]` token overrides, toggleable in the Header and persisted to `localStorage`.
+  - Fluid typography scale (`clamp()`) combining **Caveat** for brand accent headings and **Roboto** for UI hierarchy.
+  - 4px modular spacing scale, 5-level radius scale (8px, 12px, 16px, 24px, 9999px), and navy-tinted layered elevation shadows.
+  - Motion tokens (`--ease-out`, `--ease-in-out`, 120ms to 560ms) and accessible `@media (prefers-reduced-motion: reduce)` overrides.
+- **Glassmorphic Page Shell & Header**:
+  - Full-height centered container (1100px) with 24px rounded glassmorphic card (`backdrop-filter: blur(16px)` with solid CSS fallback).
+  - Sticky blurred header bar that subtly compacts and gains elevation shadow on scroll, featuring an animated floating airplane brand icon and real-time socket connection indicator.
+- **Vertical & Mobile-Responsive Timeline Stepper**:
+  - Vertical timeline with continuous connecting line animating between steps (`scaleY`).
+  - Active step with continuous pulsing ring (`pulseRing`), completed step with pop-in scale animation (`scaleIn`), and responsive horizontal layout on mobile screens (`<= 768px`).
+- **Comprehensive Documentation**: Complete token guide and usage specifications documented in [`docs/design-system.md`](docs/design-system.md).
+
 ---
 
 ## 🖼️ Application Screenshots

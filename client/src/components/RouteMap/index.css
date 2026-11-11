@@ -1,0 +1,38 @@
+.route-map-wrapper {
+  margin-top: 16px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #ffffff;
+}
+
+.route-map-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 14px;
+  background-color: #dbeafe;
+  border-bottom: 1px solid #cbd5e1;
+  font-family: 'Roboto', sans-serif;
+  font-size: 13px;
+  color: #1e293b;
+}
+
+.route-map-title {
+  font-weight: 600;
+  color: #304766;
+}
+
+.route-map-distance {
+  font-weight: 600;
+  color: #2563eb;
+  background-color: #ffffff;
+  padding: 2px 8px;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+}
+
+.route-map-container {
+  height: 220px;
+  width: 100%;
+}

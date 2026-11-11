@@ -47,6 +47,19 @@ export const requireAuth = async (req, res, next) => {
   }
 }
 
+export const requireAdmin = async (req, res, next) => {
+  try {
+    await requireAuth(req, res, () => {
+      if (req.user?.role !== 'ADMIN') {
+        return next(new AppError('Admin access required', 403, 'FORBIDDEN'))
+      }
+      next()
+    })
+  } catch (err) {
+    next(err)
+  }
+}
+
 export const optionalAuth = async (req, res, next) => {
   try {
     const token = extractToken(req)

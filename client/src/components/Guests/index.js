@@ -1,9 +1,13 @@
+import PriceBreakdown from '../PriceBreakdown'
 import './index.css'
 
 const Guests = ({
   adults,
   children,
   infants,
+  quote,
+  quoteLoading,
+  quoteError,
   onChangeAdults,
   onChangeChildren,
   onChangeInfants,
@@ -130,6 +134,8 @@ const Guests = ({
           </div>
         </div>
       </div>
+
+      <PriceBreakdown quote={quote} loading={quoteLoading} error={quoteError} />
 
       <div className="form-actions dual-actions">
         <button

@@ -2,8 +2,10 @@ import http from 'http'
 import app from './app.js'
 import { config } from './config/env.js'
 import prisma from './db/prisma.js'
+import { initSocket } from './socket.js'
 
 const server = http.createServer(app)
+initSocket(server)
 
 const startServer = async () => {
   try {

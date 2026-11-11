@@ -71,6 +71,17 @@
   padding: 2px 8px;
   border-radius: 12px;
   letter-spacing: 0.5px;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.status-pill-updated {
+  animation: badge-celebrate 0.6s ease-in-out 3;
+}
+
+@keyframes badge-celebrate {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); box-shadow: 0 0 10px rgba(37, 99, 235, 0.4); }
+  100% { transform: scale(1); }
 }
 
 .status-confirmed {

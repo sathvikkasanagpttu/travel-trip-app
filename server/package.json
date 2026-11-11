@@ -9,7 +9,12 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:push": "prisma db push",
+    "prisma:seed": "node prisma/seed.js",
+    "seed": "node prisma/seed.js",
     "test": "vitest run"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
   },
   "dependencies": {
     "@prisma/client": "^6.3.1",
@@ -21,6 +26,8 @@
     "express-rate-limit": "^7.5.0",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^10.5.0",
+    "pdfkit": "^0.20.2",
     "pino": "^9.6.0",
     "pino-http": "^10.4.0",
     "socket.io": "^4.8.1",
@@ -29,6 +36,7 @@
   "devDependencies": {
     "pino-pretty": "^13.0.0",
     "prisma": "^6.3.1",
+    "socket.io-client": "^4.8.4",
     "supertest": "^7.0.0",
     "vitest": "^3.0.5"
   }

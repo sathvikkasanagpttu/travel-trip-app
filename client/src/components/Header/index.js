@@ -1,9 +1,11 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import { useSocket } from '../../context/SocketContext'
 import './index.css'
 
 const Header = () => {
   const { user, logout } = useAuth()
+  const { connectionStatus } = useSocket()
 
   let hasRouter = false
   try {
@@ -35,7 +37,15 @@ const Header = () => {
   return (
     <header className="app-header">
       <div className="header-content">
-        {BrandElement}
+        <div className="header-brand-container">
+          {BrandElement}
+          <span
+            className={`socket-status-dot dot-${connectionStatus}`}
+            data-testid="socket-status-dot"
+            title={`Real-time: ${connectionStatus}`}
+            aria-label={`Real-time: ${connectionStatus}`}
+          />
+        </div>
 
         {hasRouter && (
           <nav className="header-nav" aria-label="Main Navigation">

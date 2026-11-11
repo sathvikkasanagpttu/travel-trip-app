@@ -3,11 +3,12 @@
   display: flex;
   flex-direction: column;
   background-color: #304766;
+  font-family: 'Roboto', sans-serif;
 }
 
 .trips-main {
   flex: 1;
-  padding: 32px 24px;
+  padding: 32px 24px 64px 24px;
 }
 
 .trips-container {
@@ -25,47 +26,351 @@
 }
 
 .trips-title {
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 700;
   color: #ffffff;
-  margin: 0 0 4px 0;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.5px;
 }
 
 .trips-subtitle {
-  color: #cbd5e1;
+  color: #dbeafe;
   font-size: 14px;
   margin: 0;
 }
 
 .new-trip-link {
   text-decoration: none;
-  padding: 10px 20px;
+  padding: 10px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  background-color: #2563eb;
+  color: #ffffff;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.new-trip-link:hover {
+  background-color: #1d4ed8;
+}
+
+.trips-controls-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.trips-tabs {
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 4px;
+  border-radius: 10px;
+  gap: 4px;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  color: #dbeafe;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.tab-btn.active-tab {
+  background-color: #ffffff;
+  color: #1e293b;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.trips-search-box {
+  flex: 1;
+  max-width: 320px;
+  min-width: 220px;
+}
+
+.trips-search-input {
+  width: 100%;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+  background-color: #ffffff;
+  color: #1e293b;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.trips-search-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.trips-error-banner {
+  background-color: #fee2e2;
+  border: 1px solid #f87171;
+  color: #991b1b;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
   font-size: 14px;
 }
 
-.trips-card {
+.trips-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.trip-card {
   background-color: #ffffff;
   border-radius: 12px;
-  padding: 32px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  padding: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.trip-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+}
+
+.trip-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.trip-ref-badge {
+  display: inline-block;
+  background-color: #dbeafe;
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+
+.trip-route {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.route-arrow {
+  color: #3b82f6;
+  font-weight: 400;
+  margin: 0 4px;
+}
+
+.status-pill {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-confirmed {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.status-pending {
+  background-color: #fef9c3;
+  color: #854d0e;
+}
+
+.status-cancelled {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.trip-card-body {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  padding: 16px 0;
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 16px;
+}
+
+.trip-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.info-val {
+  font-size: 14px;
+  color: #334155;
+  font-weight: 500;
+}
+
+.price-val {
+  color: #2563eb;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.trip-card-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+}
+
+.view-details-link {
+  text-decoration: none;
+  font-size: 13px;
+  padding: 8px 16px;
+}
+
+.download-pdf-link {
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  transition: all 0.15s ease;
+}
+
+.download-pdf-link:hover {
+  background-color: #dbeafe;
+  border-color: #bfdbfe;
+}
+
+.trips-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.pagination-btn {
+  background-color: #ffffff;
+  color: #1e293b;
+  border: 1px solid #cbd5e1;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background-color: #f8fafc;
+  border-color: #94a3b8;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-info {
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
 }
 
 .empty-trips-card {
   text-align: center;
-  padding: 48px 24px;
+  padding: 56px 24px;
+  background-color: #ffffff;
+  border-radius: 12px;
 }
 
 .empty-title {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
   color: #1e293b;
-  margin: 0 0 8px 0;
+  margin: 0 0 10px 0;
 }
 
 .empty-desc {
-  font-size: 14px;
+  font-size: 15px;
   color: #64748b;
-  max-width: 500px;
+  max-width: 480px;
   margin: 0 auto 24px auto;
-  line-height: 1.5;
+  line-height: 1.6;
+}
+
+/* Skeleton Loading Animation */
+.trips-skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.trip-skeleton-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.skeleton-line {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: 4px;
+}
+
+.skeleton-title {
+  height: 24px;
+  width: 45%;
+}
+
+.skeleton-sub {
+  height: 16px;
+  width: 70%;
+}
+
+.skeleton-meta {
+  height: 36px;
+  width: 100%;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }

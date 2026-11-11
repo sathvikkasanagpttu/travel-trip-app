@@ -43,7 +43,7 @@ model Booking {
   assistanceType   String?
   assistanceNotes  String?
   priceTotal       Float         @default(0)
-  currency         String        @default("USD")
+  currency         String        @default("INR")
   status           String        @default("PENDING") // PENDING | CONFIRMED | CANCELLED
   idempotencyKey   String?       @unique
   createdAt        DateTime      @default(now())

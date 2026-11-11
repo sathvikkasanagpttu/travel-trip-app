@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { SUCCESS_IMG_URL } from '../../constants'
+import { useBookingStatus } from '../../hooks/useBookingStatus'
 import './index.css'
 
 const Confirmed = ({
@@ -8,6 +9,7 @@ const Confirmed = ({
   bookingStatus = 'CONFIRMED',
   bookingId,
 }) => {
+  const { status: liveStatus, isUpdated } = useBookingStatus(bookingId, bookingStatus)
   let hasRouter = false
   try {
     useLocation()
@@ -42,8 +44,11 @@ const Confirmed = ({
           <span className="ref-value" data-testid="booking-reference">
             {bookingReference}
           </span>
-          <span className={`status-pill status-${bookingStatus.toLowerCase()}`}>
-            {bookingStatus}
+          <span
+            className={`status-pill status-${liveStatus.toLowerCase()} ${isUpdated ? 'status-pill-updated' : ''}`}
+            data-testid="booking-status-badge"
+          >
+            {liveStatus}
           </span>
         </div>
       )}

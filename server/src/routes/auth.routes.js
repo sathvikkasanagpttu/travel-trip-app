@@ -8,11 +8,25 @@ const router = Router()
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 20, // 20 requests per 15 mins for login/signup
+  max: 30, // 30 requests per 15 mins for signup
   message: {
     error: {
       code: 'RATE_LIMIT_EXCEEDED',
       message: 'Too many authentication attempts, please try again later',
+    },
+  },
+})
+
+// Specific 5/min per IP rate limiter for login
+const loginLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    error: {
+      code: 'RATE_LIMIT_EXCEEDED',
+      message: 'Too many login attempts, please try again after 1 minute',
     },
   },
 })
@@ -32,7 +46,7 @@ router.post('/signup', authLimiter, async (req, res, next) => {
   }
 })
 
-router.post('/login', authLimiter, async (req, res, next) => {
+router.post('/login', loginLimiter, async (req, res, next) => {
   try {
     const validated = loginSchema.parse(req.body)
     const { user, tokens } = await authService.login(validated)

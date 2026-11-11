@@ -1,9 +1,13 @@
 import { useState } from 'react'
+import WeatherStrip from '../WeatherStrip'
 import './index.css'
 
 const DateSelection = ({
   startDate,
   endDate,
+  destinationLat,
+  destinationLng,
+  destinationName,
   onChangeStartDate,
   onChangeEndDate,
   onPreviousStep,
@@ -14,7 +18,7 @@ const DateSelection = ({
     endDate: '',
   })
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault()
     const newErrors = {
       startDate: '',
@@ -48,17 +52,17 @@ const DateSelection = ({
     }
   }
 
-  const handleStartDateChange = e => {
+  const handleStartDateChange = (e) => {
     onChangeStartDate(e.target.value)
     if (errors.startDate) {
-      setErrors(prev => ({ ...prev, startDate: '' }))
+      setErrors((prev) => ({ ...prev, startDate: '' }))
     }
   }
 
-  const handleEndDateChange = e => {
+  const handleEndDateChange = (e) => {
     onChangeEndDate(e.target.value)
     if (errors.endDate) {
-      setErrors(prev => ({ ...prev, endDate: '' }))
+      setErrors((prev) => ({ ...prev, endDate: '' }))
     }
   }
 
@@ -94,6 +98,16 @@ const DateSelection = ({
           />
           {errors.endDate && <p className="error-message">{errors.endDate}</p>}
         </div>
+
+        {destinationLat && destinationLng && (
+          <WeatherStrip
+            lat={destinationLat}
+            lng={destinationLng}
+            start={startDate}
+            end={endDate}
+            destinationName={destinationName}
+          />
+        )}
 
         <div className="form-actions dual-actions">
           <button

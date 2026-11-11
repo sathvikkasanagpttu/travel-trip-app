@@ -1,12 +1,14 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { MemoryRouter } from 'react-router-dom'
-import { AuthProvider } from './context/AuthContext'
+import { AuthProvider, useAuth } from './context/AuthContext'
 import { ToastProvider } from './context/ToastContext'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import TravelTrip from './components/TravelTrip'
 import * as bookingsApi from './api/bookings'
+import * as authApi from './api/auth'
+import apiClient from './api/axios'
 
 const renderWithProviders = (ui, { route = '/' } = {}) => {
   return render(
@@ -19,6 +21,10 @@ const renderWithProviders = (ui, { route = '/' } = {}) => {
 }
 
 describe('Phase 1 New Features', () => {
+  beforeEach(() => {
+    vi.restoreAllMocks()
+  })
+
   it('renders Login page with validation', async () => {
     renderWithProviders(<Login />, { route: '/login' })
 
@@ -89,5 +95,95 @@ describe('Phase 1 New Features', () => {
     await waitFor(() => {
       expect(screen.getByTestId('booking-reference')).toHaveTextContent('TT-2026-TEST99')
     })
+  })
+
+  it('AuthContext provides login, signup, logout and tracks user state', async () => {
+    const mockUser = { id: 'u1', name: 'Test User', email: 'test@example.com', role: 'USER' }
+
+    vi.spyOn(authApi, 'getMe').mockRejectedValueOnce(new Error('Unauthenticated'))
+    vi.spyOn(authApi, 'login').mockResolvedValueOnce({ user: mockUser })
+    vi.spyOn(authApi, 'logout').mockResolvedValueOnce({ success: true })
+
+    const TestAuthConsumer = () => {
+      const { user, login, logout } = useAuth()
+      return (
+        <div>
+          <span data-testid="user-display">{user ? user.name : 'No User'}</span>
+          <button onClick={() => login('test@example.com', 'pass123')}>Log in</button>
+          <button onClick={logout}>Log out</button>
+        </div>
+      )
+    }
+
+    render(
+      <AuthProvider>
+        <TestAuthConsumer />
+      </AuthProvider>
+    )
+
+    await waitFor(() => {
+      expect(screen.getByTestId('user-display')).toHaveTextContent('No User')
+    })
+
+    fireEvent.click(screen.getByRole('button', { name: 'Log in' }))
+
+    await waitFor(() => {
+      expect(screen.getByTestId('user-display')).toHaveTextContent('Test User')
+    })
+
+    fireEvent.click(screen.getByRole('button', { name: 'Log out' }))
+
+    await waitFor(() => {
+      expect(screen.getByTestId('user-display')).toHaveTextContent('No User')
+    })
+  })
+
+  it('handles API failure on confirm by displaying error toast and staying on Confirmation step', async () => {
+    const mockUser = { id: 'u1', name: 'Alex Morgan', email: 'alex@example.com', role: 'USER' }
+    vi.spyOn(authApi, 'getMe').mockResolvedValue({ user: mockUser })
+
+    // Simulate backend network error / rejection in axios
+    vi.spyOn(apiClient, 'post').mockRejectedValueOnce({
+      response: {
+        status: 500,
+        data: {
+          error: {
+            code: 'SERVER_ERROR',
+            message: 'Database temporarily unavailable',
+          },
+        },
+      },
+    })
+
+    renderWithProviders(<TravelTrip />, { route: '/book' })
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/Name/i)).toHaveValue('Alex Morgan')
+    })
+
+    // Advance through the wizard steps
+    fireEvent.change(screen.getByLabelText(/Start Location/i), { target: { value: 'Mumbai' } })
+    fireEvent.change(screen.getByLabelText(/End Location/i), { target: { value: 'Goa' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Next' }))
+
+    fireEvent.change(screen.getByLabelText(/Start Date/i), { target: { value: '2026-12-01' } })
+    fireEvent.change(screen.getByLabelText(/End Date/i), { target: { value: '2026-12-05' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Next' }))
+
+    fireEvent.click(screen.getByRole('button', { name: 'Next' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Next' }))
+
+    // Now on Confirmation step
+    const confirmBtn = screen.getByRole('button', { name: 'Confirm' })
+    expect(confirmBtn).toBeInTheDocument()
+
+    fireEvent.click(confirmBtn)
+
+    // Should stay on Confirmation screen and show toast notification
+    await waitFor(() => {
+      expect(screen.getByText('Database temporarily unavailable')).toBeInTheDocument()
+    })
+    expect(screen.getByRole('button', { name: 'Confirm' })).toBeInTheDocument()
+    expect(screen.queryByText('Confirmed')).not.toBeInTheDocument()
   })
 })

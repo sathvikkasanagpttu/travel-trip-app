@@ -1,13 +1,21 @@
 import { useState } from 'react'
+import AutocompleteInput from '../AutocompleteInput'
+import RouteMap from '../RouteMap'
 import './index.css'
 
 const YourDetails = ({
   name,
   startLocation,
   endLocation,
+  startLat,
+  startLng,
+  endLat,
+  endLng,
   onChangeName,
   onChangeStartLocation,
   onChangeEndLocation,
+  onSelectStartPlace,
+  onSelectEndPlace,
   onNextStep,
 }) => {
   const [errors, setErrors] = useState({
@@ -16,7 +24,7 @@ const YourDetails = ({
     endLocation: '',
   })
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault()
     const newErrors = {
       name: '',
@@ -47,24 +55,27 @@ const YourDetails = ({
     }
   }
 
-  const handleNameChange = e => {
-    onChangeName(e.target.value)
+  const handleNameChange = (e) => {
+    const val = typeof e === 'string' ? e : e?.target?.value ?? ''
+    onChangeName(val)
     if (errors.name) {
-      setErrors(prev => ({ ...prev, name: '' }))
+      setErrors((prev) => ({ ...prev, name: '' }))
     }
   }
 
-  const handleStartLocationChange = e => {
-    onChangeStartLocation(e.target.value)
+  const handleStartLocationChange = (valOrEvent) => {
+    const val = typeof valOrEvent === 'string' ? valOrEvent : valOrEvent?.target?.value ?? ''
+    onChangeStartLocation(val)
     if (errors.startLocation) {
-      setErrors(prev => ({ ...prev, startLocation: '' }))
+      setErrors((prev) => ({ ...prev, startLocation: '' }))
     }
   }
 
-  const handleEndLocationChange = e => {
-    onChangeEndLocation(e.target.value)
+  const handleEndLocationChange = (valOrEvent) => {
+    const val = typeof valOrEvent === 'string' ? valOrEvent : valOrEvent?.target?.value ?? ''
+    onChangeEndLocation(val)
     if (errors.endLocation) {
-      setErrors(prev => ({ ...prev, endLocation: '' }))
+      setErrors((prev) => ({ ...prev, endLocation: '' }))
     }
   }
 
@@ -87,16 +98,18 @@ const YourDetails = ({
         </div>
 
         <div className="form-group">
-          <label htmlFor="startLocation" className="form-label">
-            Start Location
-          </label>
-          <input
+          <AutocompleteInput
             id="startLocation"
-            type="text"
-            className={`form-input ${errors.startLocation ? 'input-error' : ''}`}
+            label="Start Location"
             placeholder="Enter start location"
             value={startLocation}
+            hasError={Boolean(errors.startLocation)}
             onChange={handleStartLocationChange}
+            onSelectPlace={(place) => {
+              if (onSelectStartPlace) {
+                onSelectStartPlace(place)
+              }
+            }}
           />
           {errors.startLocation && (
             <p className="error-message">{errors.startLocation}</p>
@@ -104,21 +117,34 @@ const YourDetails = ({
         </div>
 
         <div className="form-group">
-          <label htmlFor="endLocation" className="form-label">
-            End Location
-          </label>
-          <input
+          <AutocompleteInput
             id="endLocation"
-            type="text"
-            className={`form-input ${errors.endLocation ? 'input-error' : ''}`}
+            label="End Location"
             placeholder="Enter end location"
             value={endLocation}
+            hasError={Boolean(errors.endLocation)}
             onChange={handleEndLocationChange}
+            onSelectPlace={(place) => {
+              if (onSelectEndPlace) {
+                onSelectEndPlace(place)
+              }
+            }}
           />
           {errors.endLocation && (
             <p className="error-message">{errors.endLocation}</p>
           )}
         </div>
+
+        {startLat && startLng && endLat && endLng && (
+          <RouteMap
+            startLat={startLat}
+            startLng={startLng}
+            endLat={endLat}
+            endLng={endLng}
+            startLabel={startLocation || 'Start'}
+            endLabel={endLocation || 'Destination'}
+          />
+        )}
 
         <div className="form-actions single-action">
           <button type="submit" className="primary-btn">

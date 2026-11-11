@@ -5,7 +5,7 @@ import prisma from './db/prisma.js'
 import { initSocket } from './socket.js'
 
 const server = http.createServer(app)
-initSocket(server)
+const io = initSocket(server)
 
 const startServer = async () => {
   try {
@@ -26,12 +26,21 @@ const startServer = async () => {
 // Graceful shutdown
 const shutdown = async (signal) => {
   console.log(`\nReceived ${signal}. Gracefully shutting down...`)
-  server.close(async () => {
-    console.log('HTTP server closed.')
-    await prisma.$disconnect()
-    console.log('Prisma disconnected.')
-    process.exit(0)
-  })
+  try {
+    if (io) {
+      io.close()
+      console.log('Socket.IO gateway closed.')
+    }
+    server.close(async () => {
+      console.log('HTTP server closed.')
+      await prisma.$disconnect()
+      console.log('Prisma disconnected.')
+      process.exit(0)
+    })
+  } catch (err) {
+    console.error('Error during shutdown:', err)
+    process.exit(1)
+  }
 }
 
 process.on('SIGTERM', () => shutdown('SIGTERM'))

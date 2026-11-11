@@ -2,7 +2,10 @@ import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 import cookieParser from 'cookie-parser'
+import pinoHttp from 'pino-http'
 import { config } from './config/env.js'
+import logger from './utils/logger.js'
+import prisma from './db/prisma.js'
 import authRoutes from './routes/auth.routes.js'
 import bookingRoutes from './routes/bookings.routes.js'
 import draftRoutes from './routes/drafts.routes.js'
@@ -13,6 +16,14 @@ import adminRoutes from './routes/admin.routes.js'
 import { errorHandler, AppError } from './middleware/errorHandler.js'
 
 const app = express()
+
+// Trust reverse proxies (Render, Vercel, Nginx, Cloudflare)
+app.set('trust proxy', 1)
+
+// Pino HTTP request logger
+if (config.nodeEnv !== 'test') {
+  app.use(pinoHttp({ logger }))
+}
 
 // Security headers
 app.use(helmet({
@@ -25,7 +36,8 @@ const allowedOrigins = [
   'http://localhost:5173',
   'http://127.0.0.1:5173',
   'http://localhost:3000',
-]
+  'http://localhost',
+].filter(Boolean)
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -43,14 +55,27 @@ app.use(cors({
 app.use(cookieParser())
 app.use(express.json())
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-  res.status(200).json({
-    status: 'ok',
-    environment: config.nodeEnv,
-    uptime: Math.floor(process.uptime()),
-    timestamp: new Date().toISOString(),
-  })
+// Health check endpoint (checks database connectivity)
+app.get('/health', async (req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`
+    res.status(200).json({
+      status: 'ok',
+      db: 'connected',
+      environment: config.nodeEnv,
+      uptime: Math.floor(process.uptime()),
+      timestamp: new Date().toISOString(),
+    })
+  } catch (err) {
+    res.status(503).json({
+      status: 'error',
+      db: 'disconnected',
+      error: err.message,
+      environment: config.nodeEnv,
+      uptime: Math.floor(process.uptime()),
+      timestamp: new Date().toISOString(),
+    })
+  }
 })
 
 // API routes

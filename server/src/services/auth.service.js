@@ -26,7 +26,7 @@ export const setAuthCookies = (res, { accessToken, refreshToken }) => {
   const cookieOptions = {
     httpOnly: true,
     secure: config.cookieSecure,
-    sameSite: 'lax',
+    sameSite: config.cookieSameSite,
     path: '/',
     domain: config.cookieDomain,
   }
@@ -46,7 +46,7 @@ export const clearAuthCookies = (res) => {
   const cookieOptions = {
     httpOnly: true,
     secure: config.cookieSecure,
-    sameSite: 'lax',
+    sameSite: config.cookieSameSite,
     path: '/',
     domain: config.cookieDomain,
   }

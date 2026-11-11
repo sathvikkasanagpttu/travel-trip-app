@@ -1,0 +1,118 @@
+services:
+  # ==========================================
+  # Database Service (PostgreSQL 16)
+  # ==========================================
+  db:
+    image: postgres:16-alpine
+    container_name: travel-trip-db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-traveltrip}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-traveltrip}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ==========================================
+  # Backend API Server (Node.js 20 Express + Socket.IO)
+  # ==========================================
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: travel-trip-server
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 5001
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-traveltrip}?schema=public
+      CLIENT_URL: ${CLIENT_URL:-http://localhost:3000}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-travel-trip-jwt-access-super-secret-key-2026-safe-random-phrase}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-travel-trip-jwt-refresh-super-secret-key-2026-safe-random-phrase}
+      JWT_ACCESS_EXPIRY: 15m
+      JWT_REFRESH_EXPIRY: 7d
+      COOKIE_SECURE: "false"
+      COOKIE_SAME_SITE: "lax"
+      NOMINATIM_USER_AGENT: ${NOMINATIM_USER_AGENT:-TravelTripApp/1.0 (contact@traveltrip.local)}
+      QUOTE_RATE_PER_KM: ${QUOTE_RATE_PER_KM:-5}
+      QUOTE_NIGHT_RATE: ${QUOTE_NIGHT_RATE:-1000}
+      QUOTE_ASSISTANCE_SURCHARGE: ${QUOTE_ASSISTANCE_SURCHARGE:-500}
+      AUTO_CONFIRM_SECONDS: ${AUTO_CONFIRM_SECONDS:-0}
+      SEED_ON_START: "true"
+    ports:
+      - "5001:5001"
+
+  # ==========================================
+  # Frontend Web Client (Vite + NGINX SPA Reverse Proxy)
+  # ==========================================
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: travel-trip-client
+    restart: always
+    depends_on:
+      - server
+    ports:
+      - "3000:80"
+
+  # ==========================================
+  # Development Service: Server (Profile: dev)
+  # ==========================================
+  server-dev:
+    profiles: ["dev"]
+    image: node:20-alpine
+    container_name: travel-trip-server-dev
+    working_dir: /app
+    volumes:
+      - ./server:/app
+      - server_node_modules:/app/node_modules
+    environment:
+      NODE_ENV: development
+      PORT: 5001
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-traveltrip}?schema=public
+      CLIENT_URL: http://localhost:5173
+      JWT_ACCESS_SECRET: dev_jwt_access_secret_super_secret_key_123456
+      JWT_REFRESH_SECRET: dev_jwt_refresh_secret_super_secret_key_654321
+      COOKIE_SECURE: "false"
+      COOKIE_SAME_SITE: "lax"
+    ports:
+      - "5001:5001"
+    depends_on:
+      db:
+        condition: service_healthy
+    command: sh -c "npm install && node scripts/prepare-prisma.js && (npx prisma migrate deploy || npx prisma db push) && npm run dev"
+
+  # ==========================================
+  # Development Service: Client (Profile: dev)
+  # ==========================================
+  client-dev:
+    profiles: ["dev"]
+    image: node:20-alpine
+    container_name: travel-trip-client-dev
+    working_dir: /app
+    volumes:
+      - ./client:/app
+      - client_node_modules:/app/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:5001/api/v1
+      VITE_SOCKET_URL: http://localhost:5001
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+
+volumes:
+  postgres_data:
+  server_node_modules:
+  client_node_modules:
